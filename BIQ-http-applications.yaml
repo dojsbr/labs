@@ -1,0 +1,39 @@
+---
+- name: Load balance an HTTP application on port 80 on BIG-IP
+  bigiq_application_http:
+    name: my-app
+    description: Redirect HTTP to HTTPS
+    service_environment: my-ssg
+    servers:
+      - address: 10.1.20.11
+        port: 80
+      - address: 10.1.20.12
+        port: 80
+    inbound_virtual:
+      name: foo
+      address: 2.2.2.2
+      netmask: 255.255.255.255
+      port: 443
+    provider:
+      password: "{{ admin_password}}"
+      server: "{{ inventory_hostname }}"
+      user: "{{ admin_user }}"
+      validate_certs: false
+    state: present
+  delegate_to: localhost
+
+- name: Activate BIG-IP License
+  hosts: big-ips
+  gather_facts: false
+  connection: local
+  environment:
+    F5_SERVER: '{{ inventory_hostname }}'
+    F5_USER: '{{ admin_user }}'
+    F5_PASSWORD: '{{ admin_password }}'
+    F5_VALIDATE_CERTS: false
+  tasks:
+  - name: Activate License
+    bigip_device_license:
+      license_key: Y1588-02725-68170-91959-8270646
+      accept_eula: true
+

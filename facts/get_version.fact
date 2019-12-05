@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [[ -f /usr/bin/tmsh ]]; then
+    version="BIG-IP $(tmsh show sys version | awk '/[^:]Version/ {print $2}')"
+else
+    version="$(lsb_release -a 2>/dev/null | awk '/Description/ {print $2, $3}')$(uname -i)"
+    fi
+
+    echo "{\"version\": \"$version\"}"

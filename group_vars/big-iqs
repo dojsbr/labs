@@ -1,0 +1,6 @@
+---
+ansible_ssh_user: root
+ansible_ssh_pass: default
+admin_user: admin
+admin_password: admin
+admin_default_password: admin 

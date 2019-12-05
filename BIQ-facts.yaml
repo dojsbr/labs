@@ -1,0 +1,40 @@
+---
+- name: Create BIG-IP App
+  hosts: big-iqs
+  gather_facts: false
+  connection: local
+  tasks:
+  - name: Collect BIG-IQ facts
+    bigiq_device_facts:
+      gather_subset:
+        - system-info
+        - vlans
+      provider:
+        server: "{{ inventory_hostname }}"
+        user: "{{ admin_user }}"
+        password: "{{ admin_password}}"
+        validate_certs: false
+    #delegate_to: localhost
+
+  - name: Collect all BIG-IQ facts
+    bigiq_device_facts:
+      gather_subset:
+        - all
+      provider:
+        server: "{{ inventory_hostname }}"
+        user: "{{ admin_user }}"
+        password: "{{ admin_password}}"
+        validate_certs: false
+    #delegate_to: localhost
+
+  - name: Collect all BIG-IP facts except trunks
+    bigiq_device_facts:
+      gather_subset:
+        - all
+     #   - "!trunks"
+      provider:
+        server: "{{ inventory_hostname }}"
+        user: "{{ admin_user }}"
+        password: "{{ admin_password}}"
+        validate_certs: false
+    #delegate_to: localhost

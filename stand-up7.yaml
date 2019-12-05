@@ -1,0 +1,83 @@
+---
+- name: Stand Up BIG-IP
+  hosts: big-ips
+  gather_facts: false
+  connection: local
+  environment:
+    F5_SERVER: "{{ inventory_hostname }}"
+    F5_USER: "{{ admin_user }}"
+    F5_PASSWORD: "{{ admin_default_password}}"
+    F5_VALIDATE_CERTS: false
+
+  tasks:
+  - name: Set Timezone and NTP Server
+    bigip_device_ntp:
+      timezone: America/Los_Angeles
+      ntp_servers:
+      - pool.ntp.org
+
+  - name: Set Hostname
+    bigip_hostname:
+      hostname: big-ip-1.f5trn.com
+  
+  - name: Set DNS
+    bigip_device_dns:
+      name_servers:
+      - 10.10.0.2
+      search:
+      - f5trn.com
+  
+  - name: Create External VLAN
+    bigip_vlan:
+      name: external.vlan
+      untagged_interface: 1.2
+      tag: 4093
+
+  - name: Create External Self IP
+    bigip_selfip:
+      name: external.self
+      vlan: external.vlan
+      address: 10.10.0.35
+      netmask: 255.255.0.0
+      allow_service: none
+
+  - name: Create Internal VLAN
+    bigip_vlan:
+      name: internal.vlan
+      untagged_interface: 1.1
+      tag: 4094
+
+  - name: Create internal Self IP
+    bigip_selfip:
+      name: internal.self
+      vlan: internal.vlan
+      address: 172.16.0.35
+      netmask: 255.255.0.0
+      allow_service: all    
+
+  - name: Save Sys config
+    bigip_config:
+      save: true
+
+  - name: Disable the Setup Utility
+    bigip_sys_global:
+      gui_setup: no    
+
+  - name: Provision LTM
+    bigip_provision:
+      module: ltm
+      level: nominal
+
+  - name: Wait for Provisioning to Complete
+    pause:
+      seconds: 120    
+
+  - name: Change User Passwords
+    bigip_user:
+      username_credential: "{{ item.user }}"
+      password_credential: "{{ item.passwd }}"
+    loop:
+      - user: "{{ ansible_ssh_user }}"
+        passwd: "{{ ansible_ssh_pass }}"
+      - user: "{{ admin_user }}"
+        passwd: "{{ admin_password }}"

@@ -14,7 +14,7 @@
     bigip_device_ntp:
       timezone: America/Sao_Paulo
       ntp_servers:
-      - 10.1.20.252
+      - 200.160.7.186
 
   - name: Set Hostname
     bigip_hostname:
@@ -23,7 +23,8 @@
   - name: Set DNS
     bigip_device_dns:
       name_servers:
-      - 8.8.8.8
+      - 208.67.222.222
+      - 208.67.220.220
       search:
       - f5trn.com
   
@@ -54,6 +55,20 @@
       address: 10.1.10.241
       netmask: 255.255.255.0
       allow_service: none   
+
+  - name: Criar VLAN F5Training internal
+      bigip_vlan:
+        name: vlan.internalf5trn
+        untagged_interface: 1.4
+        tag: 4092
+
+    - name: Criar Self IP F5Training internal
+      bigip_selfip:
+        name: 172.16.17.31
+        vlan: vlan.internalf5trn
+        address: 172.16.17.31
+        netmask: 255.255.0.0
+        allow_service: all
 
   - name: Save Sys config
     bigip_config:

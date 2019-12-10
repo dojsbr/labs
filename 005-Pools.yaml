@@ -11,18 +11,18 @@
 
   tasks:
   - name: Create Pool
-      bigip_pool:
-        name: app01.pool
-        monitors: app.mon
+    bigip_pool:
+      name: app01.pool
+      monitors: app.mon
 
-    - name: Add pool member
-      bigip_pool_member:
-        pool: app01.pool
-        host: "{{ item }}"
-        port: 80
-      with_items:
-      - 172.16.20.1
-      - 172.16.20.2
-      - 172.16.20.3
-      - 172.16.20.4
-      - 172.16.20.5
+  - name: Add pool member
+    bigip_pool_member:
+      pool: app01.pool
+      host: "{{ item }}"
+      port: 80
+    with_items:
+    - 172.16.20.1
+    - 172.16.20.2
+    - 172.16.20.3
+    - 172.16.20.4
+    - 172.16.20.5

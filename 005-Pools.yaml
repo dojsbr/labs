@@ -10,14 +10,14 @@
     F5_VALIDATE_CERTS: false
 
   tasks:
-  - name: Create Pool HTTP
+  - name: Create Pool F5 Training HTTP
     bigip_pool:
-      name: http_pool
-      monitors: app.mon
+      name: http_trn_pool
+      monitors: http_f5trn_mon
 
-  - name: Add pool member HTTP
+  - name: Add pool member F5 Training HTTP
     bigip_pool_member:
-      pool: http_pool
+      pool: http_trn_pool
       host: "{{ item }}"
       port: 80
     with_items:
@@ -27,15 +27,14 @@
     - 172.16.20.4
     - 172.16.20.5
 
-  - name: Create Pool HTTPS
+  - name: Create Pool F5 Training HTTPS
     bigip_pool:
-      name: https_pool
-      monitors:
-      - https
+      name: https_f5trn_pool
+      monitors: https_f5trn_mon
 
-  - name: Add pool member HTTPS
+  - name: Add pool member F5 Training HTTPS
     bigip_pool_member:
-      pool: https_pool
+      pool: https_f5trn_pool
       host: "{{ item }}"
       port: 443
     with_items:
@@ -45,15 +44,50 @@
     - 172.16.20.4
     - 172.16.20.5
 
-  - name: Create Pool ASM
+  - name: Create Pool F5 Training ASM
     bigip_pool:
-      name: hack.pool
-      monitors: app.mon
+      name: auction_pool
+      monitors:
+      - http
 
-  - name: Add pool member to ASM
+  - name: Add pool member F5 Training ASM
     bigip_pool_member:
-      pool: hack.pool
+      pool: auction_pool
       host: "{{ item }}"
       port: 80
     with_items:
     - 172.16.200.10
+
+  - name: Create Pool vLab HTTP
+    bigip_pool:
+      name: http_vlab_pool
+      monitors: http_vlab_mon
+
+  - name: Add pool member vLab HTTP
+    bigip_pool_member:
+      pool: http_vlab_pool
+      host: "{{ item }}"
+      port: 80
+    with_items:
+    - 10.1.20.11
+    - 10.1.20.12
+    - 10.1.20.13
+    - 10.1.20.14
+    - 10.1.20.15
+    
+  - name: Create Pool F5 Training HTTPS
+    bigip_pool:
+      name: https_vlab_pool
+      monitors: https_vlab_mon
+
+  - name: Add pool member F5 Training HTTPS
+    bigip_pool_member:
+      pool: https_vlab_pool
+      host: "{{ item }}"
+      port: 443
+    with_items:
+    - 10.1.20.11
+    - 10.1.20.12
+    - 10.1.20.13
+    - 10.1.20.14
+    - 10.1.20.15

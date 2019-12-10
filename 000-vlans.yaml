@@ -65,4 +65,11 @@
       address: 172.16.17.31
       netmask: 255.255.0.0
       allow_service: none
-      
+  
+  - name: Create static route with gateway address
+    bigip_static_route:
+      destination: 0.0.0.0
+      netmask: 0.0.0.0
+      gateway_address: 10.1.10.2
+      name: rota-default
+   

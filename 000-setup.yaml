@@ -1,0 +1,27 @@
+---
+- name: Stand Up BIG-IP
+  hosts: big-ips
+  gather_facts: false
+  connection: local
+  environment:
+    F5_SERVER: "{{ inventory_hostname }}"
+    F5_USER: "{{ admin_user }}"
+    F5_PASSWORD: "{{ admin_default_password}}"
+    F5_VALIDATE_CERTS: false
+
+  tasks:
+  - name: Set Timezone and NTP Server
+    bigip_device_ntp:
+      timezone: America/Sao_Paulo
+      ntp_servers:
+      - a.ntp.br
+
+  - name: Set Hostname
+    bigip_hostname:
+      hostname: big-ip-01.didata.lab
+  
+  - name: Set DNS
+    bigip_device_dns:
+      name_servers:
+      - 208.67.222.222
+      - 208.67.220.220

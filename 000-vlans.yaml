@@ -10,31 +10,24 @@
     F5_VALIDATE_CERTS: false
 
   tasks:
-  #Criar partição utilizando Route Domain Default
-  - name: Create partition "foo" using the default route domain
-    bigip_partition:
-      name: foo
-    
-#Criar partição utilizando Route Domain diferente do default
-- name: Create partition "bar" using a custom route domain
-  bigip_partition:
-    name: bar
-    route_domain: 3
+  - name: Set VLAN tag
+   bigip_vlan:
+     name: net1
+     tag: 2345
+   delegate_to: localhost
 
-#Alterar partição 
-- name: Change route domain of partition "foo"
-  bigip_partition:
-    name: foo
-    route_domain: 8
+  - name: Add VLAN 4093 as tagged to interface 1.1
+    bigip_vlan:
+     tagged_interface: 1.1
+     name: net1
+     tag: 4093
+   delegate_to: localhost
 
-#Criar uma descrição para a partição
-- name: Set a description for partition "foo"
-  bigip_partition:
-    name: foo
-    description: Tenant CompanyA
-
-#Deletar partição 
-- name: Delete the "foo" partition
-  bigip_partition:
-    name: foo
-    state: absent
+  - name: Add VLAN 4094 as tagged to interfaces 1.1 and 1.2
+    bigip_vlan:
+      tagged_interfaces:
+       - 1.1
+       - 1.2
+      name: net1
+      tag: 4094
+    delegate_to: localhost

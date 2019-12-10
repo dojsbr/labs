@@ -10,16 +10,72 @@
     F5_VALIDATE_CERTS: false
 
   tasks:
-  - name: Add virtual server
+  - name: Add virtual server F5 Training LTM HTTP
     bigip_virtual_server:
       state: present
       partition: Common
-      name: http_vs
-      destination: 10.1.10.10
-      port: 443
-      pool: app01.pool
+      name: http_f5trn_vs
+      destination: 10.10.17.100
+      port: 80
+      pool: http_trn_pool
       snat: Automap
-      description: Test Virtual Server
+      description: F5 Training LTM HTTP
+      profiles:
+       - http
+    delegate_to: localhost
+  
+  - name: Add virtual server F5 Training LTM HTTPS
+    bigip_virtual_server:
+      state: present
+      partition: Common
+      name: https_f5trn_vs
+      destination: 10.10.17.100
+      port: 443
+      pool: https_trn_pool
+      snat: Automap
+      description: F5 Training LTM HTTPS
+      profiles:
+       - http
+    delegate_to: localhost
+  
+  - name: Add virtual server F5 vLab LTM HTTP
+    bigip_virtual_server:
+      state: present
+      partition: Common
+      name: http_vlab_vs
+      destination: 10.1.10.20
+      port: 80
+      pool: http_vlab_pool
+      snat: Automap
+      description: F5 vLab LTM HTTP
+      profiles:
+       - http
+    delegate_to: localhost
+  
+  - name: Add virtual server F5 vLab LTM HTTPS
+    bigip_virtual_server:
+      state: present
+      partition: Common
+      name: https_vlab_vs
+      destination: 10.1.10.30
+      port: 443
+      pool: https_vlab_pool
+      snat: Automap
+      description: F5 vLab LTM HTTPS
+      profiles:
+       - http
+    delegate_to: localhost
+  
+  - name: Add virtual server ASM Hack Yourself
+    bigip_virtual_server:
+      state: present
+      partition: Common
+      name: asm_vs
+      destination: 10.10.17.101
+      port: 80
+      pool: auction_pool
+      snat: Automap
+      description: ASM Hack Yourself
       profiles:
        - http
     delegate_to: localhost

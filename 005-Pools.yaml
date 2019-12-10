@@ -10,14 +10,14 @@
     F5_VALIDATE_CERTS: false
 
   tasks:
-  - name: Create Pool
+  - name: Create Pool HTTP
     bigip_pool:
-      name: app01.pool
+      name: http_pool
       monitors: app.mon
 
-  - name: Add pool member
+  - name: Add pool member HTTP
     bigip_pool_member:
-      pool: app01.pool
+      pool: http_pool
       host: "{{ item }}"
       port: 80
     with_items:
@@ -26,3 +26,34 @@
     - 172.16.20.3
     - 172.16.20.4
     - 172.16.20.5
+
+  - name: Create Pool HTTPS
+    bigip_pool:
+      name: https_pool
+      monitors:
+      - https
+
+  - name: Add pool member HTTPS
+    bigip_pool_member:
+      pool: https_pool
+      host: "{{ item }}"
+      port: 443
+    with_items:
+    - 172.16.20.1
+    - 172.16.20.2
+    - 172.16.20.3
+    - 172.16.20.4
+    - 172.16.20.5
+
+  - name: Create Pool ASM
+    bigip_pool:
+      name: hack.pool
+      monitors: app.mon
+
+  - name: Add pool member to ASM
+    bigip_pool_member:
+      pool: hack.pool
+      host: "{{ item }}"
+      port: 80
+    with_items:
+    - 172.16.20.100

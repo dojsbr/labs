@@ -1,63 +1,28 @@
 ---
-- name: Create BIG-IP App
+- name: Stand Up BIG-IP
   hosts: big-ips
   gather_facts: false
   connection: local
-  tasks:
-    - name: Create monitor
-      bigip_monitor_http:
-        name: app.mon
-        send: GET /
-        receive: If you see this
-        provider:
-          server: "{{ inventory_hostname }}"
-          user: "{{ admin_user }}"
-          password: "{{ admin_password}}"
-          validate_certs: false
+  environment:
+    F5_SERVER: "{{ inventory_hostname }}"
+    F5_USER: "{{ admin_user }}"
+    F5_PASSWORD: "{{ admin_default_password}}"
+    F5_VALIDATE_CERTS: false
 
-    - name: Create Pool
+  tasks:
+  - name: Create Pool
       bigip_pool:
-        name: app2.pool
+        name: app01.pool
         monitors: app.mon
-        provider:
-          server: "{{inventory_hostname }}"
-          user: "{{ admin_user }}"
-          password: "{{ admin_password}}"
-          validate_certs: false
 
     - name: Add pool member
       bigip_pool_member:
-        pool: app2.pool
+        pool: app01.pool
         host: "{{ item }}"
         port: 80
-        provider:
-          server: "{{inventory_hostname }}"
-          user: "{{ admin_user }}"
-          password: "{{ admin_password}}"
-          validate_certs: false
       with_items:
-      - 10.10.0.1
-      - 10.10.0.2
-      - 10.10.0.3
-      - 10.10.0.4
-      - 10.10.0.5
-      - 10.10.0.6
-      - 10.10.0.7
-      - 10.10.0.8
-
-    - name: Create Virtual Server
-      bigip_virtual_server:
-        name: app2.vs
-        destination: 10.10.0.101
-        port: 443
-        pool: app2.pool
-        profiles:
-        - http
-        - name: clientssl
-          context: client-side
-        snat: automap
-        provider:
-          server: "{{inventory_hostname }}"
-          user: "{{ admin_user }}"
-          password: "{{ admin_password}}"
-          validate_certs: false
+      - 172.16.20.1
+      - 172.16.20.2
+      - 172.16.20.3
+      - 172.16.20.4
+      - 172.16.20.5

@@ -10,8 +10,27 @@
     F5_VALIDATE_CERTS: false
   
   tasks:    
-  - name: Create monitor
+  - name: Create monitor F5 Training HTTP
     bigip_monitor_http:
-      name: app.mon
-      send: GET /
-      receive: If you see this
+      name: http_f5trn_mon
+      send: GET /index.php\r\n
+      receive: Server [1-5]
+
+  - name: Create monitor F5 Training HTTPS
+    bigip_monitor_https:
+      name: https_f5trn_mon
+      send: GET /index.php\r\n
+      receive: Server [1-5]
+  
+  - name: Create monitor vLab HTTP
+    bigip_monitor_http:
+      name: http_vlab_mon
+      send: GET /HealthCheck.html\r\n
+      receive: SERVER_UP
+
+  - name: Create monitor F5 Training HTTPS
+    bigip_monitor_https:
+      name: https_vlab_mon
+      send: GET /HealthCheck.html\r\n
+      receive: SERVER_UP
+      

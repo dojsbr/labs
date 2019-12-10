@@ -25,3 +25,11 @@
       name_servers:
       - 208.67.222.222
       - 208.67.220.220
+
+  - name: Disable the Setup Utility
+    bigip_sys_global:
+      gui_setup: no 
+      
+  - name: Save Sys config
+    bigip_config:
+      save: true

@@ -64,6 +64,10 @@
       description: F5 vLab LTM HTTPS
       profiles:
        - http
+       - name: clientssl
+         context: client-side
+       - name: serverssl
+         context: server-side
     delegate_to: localhost
   
   - name: Add virtual server ASM Hack Yourself

@@ -1,0 +1,17 @@
+---
+- name: Stand Up BIG-IP
+  hosts: big-ips
+  gather_facts: false
+  connection: local
+  environment:
+    F5_SERVER: "{{ inventory_hostname }}"
+    F5_USER: "{{ admin_user }}"
+    F5_PASSWORD: "{{ admin_default_password}}"
+    F5_VALIDATE_CERTS: false
+
+  tasks:
+  - name: Provision SSLO at "nominal" level
+    bigip_provision:
+      module: sslo
+      level: nominal
+    

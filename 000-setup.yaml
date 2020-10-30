@@ -18,7 +18,7 @@
 
   - name: Set Hostname
     bigip_hostname:
-      hostname: big-ip-01.didata.lab
+      hostname: big-ip-01.ntllab.io
   
   - name: Set DNS
     bigip_device_dns:
